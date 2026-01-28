@@ -1,0 +1,110 @@
+{
+  "module": "11_CodeGenerator_JSGenerator",
+  "purpose": "生成微信小程序的JavaScript代码(Page和Component格式)",
+  "timestamp": "2026-01-23",
+
+  "existing_structure": {
+    "project_types": "C:\\Users\\wzy16\\Desktop\\new project\\01_Core_ProjectStructure\\implementation\\types.ts",
+    "event_types": "C:\\Users\\wzy16\\Desktop\\new project\\02_Core_EventSystem\\implementation\\types.ts",
+    "related_modules": [
+      "01_Core_ProjectStructure - 提供项目和页面数据结构",
+      "02_Core_EventSystem - 提供事件系统类型",
+      "03_Core_VariableSystem - 提供变量管理",
+      "09_CodeGenerator_WXMLGenerator - WXML生成器(参考实现模式)"
+    ]
+  },
+
+  "key_findings": {
+    "data_structures": {
+      "Page": {
+        "path": "01_Core_ProjectStructure/implementation/types.ts",
+        "fields": ["id", "name", "path", "config", "components", "data", "variables", "lifecycleEvents", "customEvents"]
+      },
+      "Component": {
+        "path": "01_Core_ProjectStructure/implementation/types.ts",
+        "fields": ["id", "type", "name", "properties", "style", "events", "children", "dataBindings", "condition", "listRendering"]
+      },
+      "LifecycleEvent": {
+        "types": ["onLoad", "onShow", "onReady", "onHide", "onUnload", "onPullDownRefresh", "onReachBottom", "onShareAppMessage"],
+        "structure": "name + actions"
+      },
+      "Event System": {
+        "path": "02_Core_EventSystem/implementation/types.ts",
+        "event_types": ["standard", "while", "forEach", "comment", "group"],
+        "action_types": ["setData", "navigateTo", "showToast", "request", "custom", "等30+种"]
+      }
+    },
+
+    "output_format": {
+      "page_format": "Page({ data: {...}, onLoad() {...}, methods... })",
+      "component_format": "Component({ properties: {...}, data: {...}, methods: {...}, lifetimes: {...} })"
+    },
+
+    "tech_stack": {
+      "language": "TypeScript",
+      "testing": "vitest",
+      "coverage_requirement": ">90%"
+    }
+  },
+
+  "implementation_requirements": {
+    "core_files": [
+      "types.ts - 类型定义",
+      "js-generator.ts - 主生成器",
+      "lifecycle-generator.ts - 生命周期代码生成",
+      "event-handler-generator.ts - 事件处理器生成",
+      "data-manager-generator.ts - 数据管理代码",
+      "method-generator.ts - 方法生成",
+      "import-generator.ts - 导入语句生成",
+      "formatter.ts - 代码格式化"
+    ],
+
+    "test_coverage": [
+      "Page代码生成",
+      "Component代码生成",
+      "生命周期方法",
+      "事件处理器",
+      "数据管理(data/setData)",
+      "导入语句",
+      "代码格式化"
+    ],
+
+    "design_docs": [
+      "design/architecture.md - 架构设计",
+      "design/dataflow.md - 数据流设计"
+    ]
+  },
+
+  "observations": {
+    "patterns_found": [
+      "所有模块都使用types.ts定义接口",
+      "测试使用vitest框架",
+      "设计文档包含架构和数据流两个方面",
+      "核心类通常有create/update/validate等方法"
+    ],
+
+    "potential_challenges": [
+      "需要处理Page和Component两种不同格式",
+      "事件处理器的this绑定和上下文管理",
+      "生成的代码需要符合微信小程序规范",
+      "复杂事件流的代码生成",
+      "保持生成代码的可读性"
+    ],
+
+    "integration_points": [
+      "需要读取Page/Component定义(来自ProjectStructure)",
+      "需要解析事件流(来自EventSystem)",
+      "需要处理变量引用(来自VariableSystem)",
+      "生成的代码需要配合WXML使用"
+    ]
+  },
+
+  "next_steps": [
+    "创建设计文档(architecture.md和dataflow.md)",
+    "实现types.ts定义所有接口",
+    "实现js-generator.ts核心生成逻辑",
+    "实现各个子生成器模块",
+    "编写完整测试套件",
+    "验证覆盖率>90%"
+  ]
+}

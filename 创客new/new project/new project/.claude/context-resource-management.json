@@ -1,0 +1,90 @@
+{
+  "module": "04_Core_ResourceManagement",
+  "timestamp": "2026-01-23T18:00:00Z",
+  "context_type": "initial",
+  "findings": {
+    "existing_patterns": {
+      "module_structure": {
+        "design": ["architecture.md", "dataflow.md"],
+        "implementation": ["types.ts", "core.ts", "tests/*.test.ts", "vitest.config.ts"],
+        "reference": "GDevelop 源码参考"
+      },
+      "code_patterns": {
+        "type_definition": "types.ts - 完整的 TypeScript 接口定义",
+        "manager_class": "Manager 类封装核心逻辑",
+        "error_handling": "自定义错误类继承自基类 ProjectError",
+        "validation": "输入验证,参数检查",
+        "serialization": "JSON 序列化支持"
+      },
+      "testing_pattern": {
+        "framework": "vitest",
+        "location": "implementation/tests/",
+        "coverage_requirement": "> 90%",
+        "test_types": ["单元测试", "边界条件", "异常处理"]
+      }
+    },
+    "reference_code": {
+      "gdevelop_resource_ui": "reference/ide/index.js - React 资源列表组件",
+      "key_concepts": [
+        "资源类型枚举 (ResourceKind)",
+        "资源管理器 (ResourcesManager)",
+        "资源加载器 (ResourcesLoader)",
+        "资源验证和错误检测",
+        "资源缩略图显示",
+        "资源重命名和删除"
+      ]
+    },
+    "wechat_miniprogram_specifics": {
+      "file_paths": [
+        "本地临时文件路径 (wx.env.USER_DATA_PATH)",
+        "云存储文件ID (cloud://)",
+        "网络URL (https://)"
+      ],
+      "image_formats": ["jpg", "jpeg", "png", "gif", "svg"],
+      "audio_formats": ["mp3", "wav", "aac", "m4a"],
+      "video_formats": ["mp4"],
+      "size_limits": {
+        "image": "10MB",
+        "audio": "10MB",
+        "video": "50MB"
+      }
+    },
+    "requirements": {
+      "types": [
+        "ResourceType 枚举",
+        "Resource 接口",
+        "ResourceMetadata 接口"
+      ],
+      "classes": [
+        "ResourceManager - 资源管理器",
+        "ResourceLoader - 资源加载器",
+        "StorageAdapter 接口和实现",
+        "ImageProcessor - 图片处理器"
+      ],
+      "features": [
+        "添加/删除/重命名资源",
+        "按类型查找资源",
+        "资源验证",
+        "图片处理(resize/crop/compress)",
+        "本地和云存储支持",
+        "预加载机制"
+      ]
+    }
+  },
+  "key_decisions": {
+    "type_system": "使用 TypeScript strict 模式,所有接口明确定义",
+    "storage_strategy": "适配器模式支持本地和云存储",
+    "image_processing": "独立的 ImageProcessor 类处理图片操作",
+    "validation": "每个资源类型有独立的验证规则",
+    "error_handling": "自定义错误类,提供详细错误信息"
+  },
+  "next_steps": [
+    "创建 types.ts - 定义所有类型",
+    "实现 resource-manager.ts",
+    "实现 resource-loader.ts",
+    "实现 storage-adapter.ts",
+    "实现 image-processor.ts",
+    "编写完整测试套件",
+    "创建设计文档"
+  ]
+}

@@ -1,0 +1,2139 @@
+// 积木块类型定义
+
+// 积木块基础类型
+export interface Block {
+  id: string;
+  type: BlockType;
+  category: BlockCategory;
+  name: string;
+  inputs: BlockInput[];
+  outputs?: BlockOutput[];
+  next?: string; // 下一个块的ID
+  parent?: string; // 父块ID
+  values: Record<string, unknown>;
+}
+
+// 积木类别
+export type BlockCategory =
+  | 'event'         // 事件触发 - 黄色
+  | 'condition'     // 条件判断 - 蓝色
+  | 'action'        // 动作执行 - 绿色
+  | 'data'          // 数据操作 - 橙色
+  | 'control'       // 控制流程 - 橙黄色
+  | 'math'          // 数学运算 - 绿色
+  | 'text'          // 文本操作 - 黄绿色
+  | 'variable'      // 变量 - 橙色
+  | 'game_event'    // 游戏事件 - 金色
+  | 'game_motion'   // 游戏运动 - 天蓝色
+  | 'game_looks'    // 游戏外观 - 紫色
+  | 'game_sensing'  // 游戏侦测 - 青蓝色
+  | 'game_state'    // 游戏状态 - 粉红色
+  | 'game_clone'    // 游戏克隆 - 粉紫色
+  | 'game_sound'    // 声音 - 粉色
+  | 'game_physics'  // 物理 - 青绿色
+  | 'game_effect'   // 特效 - 紫红色
+  | 'game_list'     // 列表 - 红橙色
+  | 'game_camera';  // 摄像机 - 深蓝色
+
+// 积木类型
+export type BlockType =
+  // 事件类
+  | 'event_tap'
+  | 'event_longpress'
+  | 'event_input'
+  | 'event_change'
+  | 'event_load'
+  | 'event_show'
+  | 'event_hide'
+  | 'event_scroll'
+  // 条件类
+  | 'condition_if'
+  | 'condition_ifelse'
+  | 'condition_compare'
+  | 'condition_and'
+  | 'condition_or'
+  | 'condition_not'
+  // 动作类
+  | 'action_setdata'
+  | 'action_navigate'
+  | 'action_request'
+  | 'action_toast'
+  | 'action_modal'
+  | 'action_loading'
+  | 'action_storage'
+  | 'action_playaudio'
+  | 'action_vibrate'
+  // 数据类
+  | 'data_variable'
+  | 'data_getvalue'
+  | 'data_setvalue'
+  | 'data_array'
+  | 'data_object'
+  // 控制类
+  | 'control_wait'
+  | 'control_repeat'
+  | 'control_foreach'
+  | 'control_stop'
+  // 数学类
+  | 'math_number'
+  | 'math_arithmetic'
+  | 'math_random'
+  | 'math_round'
+  | 'math_mod'
+  | 'math_abs'
+  | 'math_minmax'
+  | 'math_sqrt'
+  | 'math_power'
+  | 'math_trig'
+  | 'math_constrain'
+  // 文本类
+  | 'text_string'
+  | 'text_join'
+  | 'text_length'
+  | 'text_contains'
+  | 'text_letter'
+  // 游戏事件类
+  | 'game_event_start'
+  | 'game_event_update'
+  | 'game_event_keydown'
+  | 'game_event_keyup'
+  | 'game_event_collision'
+  | 'game_event_message'
+  | 'game_event_clone'
+  // 游戏运动类
+  | 'game_move'
+  | 'game_moveto'
+  | 'game_glide'
+  | 'game_setvelocity'
+  | 'game_rotate'
+  | 'game_rotateto'
+  | 'game_pointtowards'
+  | 'game_bounce'
+  // 游戏外观类
+  | 'game_show'
+  | 'game_hide'
+  | 'game_setsize'
+  | 'game_setscale'
+  | 'game_setopacity'
+  | 'game_nextcostume'
+  | 'game_setcostume'
+  // 游戏侦测类
+  | 'game_istouching'
+  | 'game_istouchingcolor'
+  | 'game_getposition'
+  | 'game_getrotation'
+  | 'game_distanceto'
+  | 'game_keypressed'
+  // 游戏状态类
+  | 'game_setscore'
+  | 'game_addscore'
+  | 'game_getscore'
+  | 'game_setlives'
+  | 'game_loselife'
+  | 'game_getlives'
+  | 'game_gotoscene'
+  | 'game_restartgame'
+  | 'game_gameover'
+  // 游戏克隆类
+  | 'game_clone'
+  | 'game_cloneof'
+  | 'game_destroy'
+  | 'game_broadcast'
+  | 'game_broadcastwait'
+  // 游戏声音类
+  | 'game_playsound'
+  | 'game_playmusic'
+  | 'game_stopsound'
+  | 'game_stopallsound'
+  | 'game_setvolume'
+  | 'game_changevolume'
+  // 游戏物理类
+  | 'game_setgravity'
+  | 'game_setfriction'
+  | 'game_setbounce'
+  | 'game_applyforce'
+  | 'game_setmass'
+  | 'game_enablephysics'
+  | 'game_place_invisible_platform'
+  | 'game_remove_invisible_platform'
+  // 游戏特效类
+  | 'game_seteffect'
+  | 'game_changeeffect'
+  | 'game_cleareffects'
+  | 'game_shake'
+  | 'game_flash'
+  | 'game_fadein'
+  | 'game_fadeout'
+  // 游戏列表类
+  | 'game_createlist'
+  | 'game_addtolist'
+  | 'game_removefromlist'
+  | 'game_getlistitem'
+  | 'game_setlistitem'
+  | 'game_listlength'
+  | 'game_listcontains'
+  // 更多控制类
+  | 'control_forever'
+  | 'control_waituntil'
+  | 'control_repeatuntil'
+  // 更多事件类
+  | 'game_event_touch'
+  | 'game_event_swipe'
+  | 'game_event_timer'
+  // 计时器类
+  | 'game_resettimer'
+  | 'game_gettimer'
+  // 摄像机类
+  | 'game_camera_follow'
+  | 'game_set_scene_size'
+  | 'game_set_background'
+  | 'game_add_parallax_layer'
+  | 'game_set_scroll_direction'
+  | 'game_set_boundary_mode'
+  | 'game_enable_drag';
+
+// 积木输入
+export interface BlockInput {
+  name: string;
+  label: string;
+  type: BlockInputType;
+  defaultValue?: unknown;
+  options?: { label: string; value: unknown }[];
+  placeholder?: string;
+  required?: boolean;
+  blockId?: string; // 如果是嵌套块
+}
+
+export type BlockInputType =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'select'
+  | 'variable'
+  | 'expression'
+  | 'block'  // 可嵌套块
+  | 'component'; // 组件引用
+
+// 积木输出
+export interface BlockOutput {
+  name: string;
+  type: 'value' | 'boolean' | 'any';
+}
+
+// 积木定义（用于积木库）
+export interface BlockDefinition {
+  type: BlockType;
+  category: BlockCategory;
+  name: string;
+  description: string;
+  icon?: string;
+  color: string;
+  inputs: Omit<BlockInput, 'blockId'>[];
+  outputs?: BlockOutput[];
+  canHaveNext: boolean; // 是否可以有下一个块
+  canBeNested: boolean; // 是否可以被嵌套
+  template: string; // 显示模板
+}
+
+// 积木连接
+export interface BlockConnection {
+  fromBlockId: string;
+  fromOutput?: string;
+  toBlockId: string;
+  toInput: string;
+}
+
+// 事件逻辑组
+export interface EventLogicGroup {
+  id: string;
+  componentId: string;
+  trigger: string;
+  blocks: Block[];
+  connections: BlockConnection[];
+  enabled: boolean;
+}
+
+// 积木编辑器状态
+export interface BlockEditorState {
+  selectedBlockId: string | null;
+  draggingBlock: Block | null;
+  clipboard: Block | null;
+  zoom: number;
+  panOffset: { x: number; y: number };
+}
+
+// 颜色配置 - Scratch 风格游戏主题
+export const BLOCK_COLORS: Record<BlockCategory, string> = {
+  event: '#FFBF00',        // 金黄色 - 事件触发
+  condition: '#5B80A5',    // 靛蓝色 - 逻辑条件
+  action: '#59C059',       // 翠绿色 - 动作执行
+  data: '#FF8C1A',         // 橙色 - 数据变量
+  control: '#FFAB19',      // 橙黄色 - 控制流程
+  math: '#40BF4A',         // 深绿色 - 数学运算
+  text: '#5CB712',         // 黄绿色 - 文本操作
+  variable: '#FF8C1A',     // 橙色 - 变量
+  game_event: '#FFBF00',   // 金黄色 - 游戏事件
+  game_motion: '#4C97FF',  // 天蓝色 - 运动
+  game_looks: '#9966FF',   // 紫色 - 外观
+  game_sensing: '#5CB1D6', // 青蓝色 - 侦测
+  game_state: '#FF6680',   // 粉红色 - 游戏状态
+  game_clone: '#CF63CF',   // 粉紫色 - 克隆/消息
+  game_sound: '#D65CD6',   // 粉色 - 声音
+  game_physics: '#4CBFE6', // 青绿色 - 物理
+  game_effect: '#9933FF',  // 紫红色 - 特效
+  game_list: '#FF661A',    // 红橙色 - 列表
+  game_camera: '#1E90FF',  // 深蓝色 - 摄像机
+};
+
+// 积木库定义
+export const BLOCK_DEFINITIONS: BlockDefinition[] = [
+  // 事件类
+  {
+    type: 'event_tap',
+    category: 'event',
+    name: '当点击时',
+    description: '当用户点击组件时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🖱️ 当点击时',
+  },
+  {
+    type: 'event_longpress',
+    category: 'event',
+    name: '当长按时',
+    description: '当用户长按组件时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👆 当长按时',
+  },
+  {
+    type: 'event_input',
+    category: 'event',
+    name: '当输入时',
+    description: '当用户输入内容时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⌨️ 当输入时',
+  },
+  {
+    type: 'event_change',
+    category: 'event',
+    name: '当值改变时',
+    description: '当组件值改变时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔄 当值改变时',
+  },
+  {
+    type: 'event_load',
+    category: 'event',
+    name: '当页面加载时',
+    description: '页面加载完成时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📄 当页面加载时',
+  },
+  {
+    type: 'event_show',
+    category: 'event',
+    name: '当页面显示时',
+    description: '页面显示时触发',
+    color: BLOCK_COLORS.event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👁️ 当页面显示时',
+  },
+
+  // 条件类 - 逻辑运算
+  {
+    type: 'condition_if',
+    category: 'condition',
+    name: '如果...那么',
+    description: '条件判断，满足条件则执行',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'condition', label: '条件', type: 'expression', required: true, placeholder: '条件' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔀 如果 {condition} 那么',
+  },
+  {
+    type: 'condition_ifelse',
+    category: 'condition',
+    name: '如果...否则',
+    description: '条件判断，含否则分支',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'condition', label: '条件', type: 'expression', required: true, placeholder: '条件' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔀 如果 {condition} 那么...否则...',
+  },
+  {
+    type: 'condition_compare',
+    category: 'condition',
+    name: '比较',
+    description: '比较两个值的大小关系',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'left', label: '左值', type: 'expression', required: true, placeholder: '值1' },
+      { name: 'operator', label: '运算符', type: 'select', defaultValue: '==', options: [
+        { label: '=', value: '==' },
+        { label: '≠', value: '!=' },
+        { label: '>', value: '>' },
+        { label: '<', value: '<' },
+        { label: '≥', value: '>=' },
+        { label: '≤', value: '<=' },
+      ]},
+      { name: 'right', label: '右值', type: 'expression', required: true, placeholder: '值2' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '◇ {left} {operator} {right}',
+  },
+  {
+    type: 'condition_and',
+    category: 'condition',
+    name: '与',
+    description: '两个条件同时满足',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'left', label: '条件1', type: 'expression', required: true, placeholder: '条件1' },
+      { name: 'right', label: '条件2', type: 'expression', required: true, placeholder: '条件2' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '◇ {left} 与 {right}',
+  },
+  {
+    type: 'condition_or',
+    category: 'condition',
+    name: '或',
+    description: '满足任一条件即可',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'left', label: '条件1', type: 'expression', required: true, placeholder: '条件1' },
+      { name: 'right', label: '条件2', type: 'expression', required: true, placeholder: '条件2' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '◇ {left} 或 {right}',
+  },
+  {
+    type: 'condition_not',
+    category: 'condition',
+    name: '非',
+    description: '条件取反',
+    color: BLOCK_COLORS.condition,
+    inputs: [
+      { name: 'condition', label: '条件', type: 'expression', required: true, placeholder: '条件' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '◇ 不满足 {condition}',
+  },
+
+  // 动作类
+  {
+    type: 'action_setdata',
+    category: 'action',
+    name: '设置数据',
+    description: '设置页面数据',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'key', label: '数据名', type: 'string', required: true, placeholder: '输入数据名' },
+      { name: 'value', label: '值', type: 'expression', required: true, placeholder: '输入值或表达式' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📝 设置 {key} 为 {value}',
+  },
+  {
+    type: 'action_navigate',
+    category: 'action',
+    name: '跳转页面',
+    description: '跳转到指定页面',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'url', label: '页面路径', type: 'string', required: true, placeholder: '/pages/xxx/xxx' },
+      { name: 'type', label: '跳转方式', type: 'select', defaultValue: 'navigateTo', options: [
+        { label: '跳转', value: 'navigateTo' },
+        { label: '重定向', value: 'redirectTo' },
+        { label: '切换Tab', value: 'switchTab' },
+        { label: '返回', value: 'navigateBack' },
+        { label: '重启', value: 'reLaunch' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔗 {type} 到 {url}',
+  },
+  {
+    type: 'action_toast',
+    category: 'action',
+    name: '显示提示',
+    description: '显示轻提示',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'title', label: '提示内容', type: 'string', required: true, placeholder: '提示文字' },
+      { name: 'icon', label: '图标', type: 'select', defaultValue: 'none', options: [
+        { label: '无', value: 'none' },
+        { label: '成功', value: 'success' },
+        { label: '加载', value: 'loading' },
+        { label: '错误', value: 'error' },
+      ]},
+      { name: 'duration', label: '持续时间(ms)', type: 'number', defaultValue: 1500 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💬 提示 "{title}"',
+  },
+  {
+    type: 'action_modal',
+    category: 'action',
+    name: '显示弹窗',
+    description: '显示模态弹窗',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'title', label: '标题', type: 'string', required: true },
+      { name: 'content', label: '内容', type: 'string', required: true },
+      { name: 'showCancel', label: '显示取消按钮', type: 'boolean', defaultValue: true },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📢 弹窗 "{title}"',
+  },
+  {
+    type: 'action_loading',
+    category: 'action',
+    name: '显示加载',
+    description: '显示/隐藏加载提示',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'show', label: '显示/隐藏', type: 'boolean', defaultValue: true },
+      { name: 'title', label: '提示文字', type: 'string', defaultValue: '加载中...' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⏳ {show} 加载 "{title}"',
+  },
+  {
+    type: 'action_request',
+    category: 'action',
+    name: '发送请求',
+    description: '发送网络请求',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'url', label: 'URL', type: 'string', required: true },
+      { name: 'method', label: '方法', type: 'select', defaultValue: 'GET', options: [
+        { label: 'GET', value: 'GET' },
+        { label: 'POST', value: 'POST' },
+        { label: 'PUT', value: 'PUT' },
+        { label: 'DELETE', value: 'DELETE' },
+      ]},
+      { name: 'data', label: '请求数据', type: 'expression' },
+      { name: 'resultVar', label: '结果存入变量', type: 'string' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🌐 请求 {method} {url}',
+  },
+  {
+    type: 'action_storage',
+    category: 'action',
+    name: '本地存储',
+    description: '读写本地存储',
+    color: BLOCK_COLORS.action,
+    inputs: [
+      { name: 'action', label: '操作', type: 'select', defaultValue: 'set', options: [
+        { label: '保存', value: 'set' },
+        { label: '读取', value: 'get' },
+        { label: '删除', value: 'remove' },
+      ]},
+      { name: 'key', label: '键名', type: 'string', required: true },
+      { name: 'value', label: '值', type: 'expression' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💾 {action} 存储 "{key}"',
+  },
+
+  // 控制类
+  {
+    type: 'control_wait',
+    category: 'control',
+    name: '等待',
+    description: '等待指定时间',
+    color: BLOCK_COLORS.control,
+    inputs: [
+      { name: 'duration', label: '时间(秒)', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⏱️ 等待 {duration} 秒',
+  },
+  {
+    type: 'control_repeat',
+    category: 'control',
+    name: '重复',
+    description: '重复执行指定次数',
+    color: BLOCK_COLORS.control,
+    inputs: [
+      { name: 'times', label: '次数', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔁 重复 {times} 次',
+  },
+  {
+    type: 'control_foreach',
+    category: 'control',
+    name: '遍历',
+    description: '遍历列表中的每一项',
+    color: BLOCK_COLORS.control,
+    inputs: [
+      { name: 'list', label: '列表', type: 'expression', required: true },
+      { name: 'itemVar', label: '项变量名', type: 'string', defaultValue: 'item' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📋 遍历 {list} 中的每个 {itemVar}',
+  },
+  {
+    type: 'control_stop',
+    category: 'control',
+    name: '停止',
+    description: '停止当前逻辑执行',
+    color: BLOCK_COLORS.control,
+    inputs: [],
+    canHaveNext: false,
+    canBeNested: false,
+    template: '⛔ 停止执行',
+  },
+
+  // 数据类
+  {
+    type: 'data_variable',
+    category: 'data',
+    name: '变量',
+    description: '引用变量值',
+    color: BLOCK_COLORS.data,
+    inputs: [
+      { name: 'name', label: '变量名', type: 'variable', required: true },
+    ],
+    outputs: [{ name: 'value', type: 'any' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '📌 {name}',
+  },
+  {
+    type: 'data_setvalue',
+    category: 'data',
+    name: '设置变量',
+    description: '设置变量的值',
+    color: BLOCK_COLORS.data,
+    inputs: [
+      { name: 'name', label: '变量名', type: 'variable', required: true },
+      { name: 'value', label: '值', type: 'expression', required: true },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📌 设置 {name} = {value}',
+  },
+
+  // 数学类 - 运算积木
+  {
+    type: 'math_number',
+    category: 'math',
+    name: '数字',
+    description: '数字值',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'value', label: '数值', type: 'number', defaultValue: 0 },
+    ],
+    outputs: [{ name: 'value', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {value}',
+  },
+  {
+    type: 'math_arithmetic',
+    category: 'math',
+    name: '四则运算',
+    description: '加减乘除运算',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'left', label: '左值', type: 'expression', required: true, placeholder: '数值' },
+      { name: 'operator', label: '运算符', type: 'select', defaultValue: '+', options: [
+        { label: '+', value: '+' },
+        { label: '-', value: '-' },
+        { label: '×', value: '*' },
+        { label: '÷', value: '/' },
+      ]},
+      { name: 'right', label: '右值', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {left} {operator} {right}',
+  },
+  {
+    type: 'math_random',
+    category: 'math',
+    name: '随机数',
+    description: '生成指定范围的随机整数',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'min', label: '最小值', type: 'number', defaultValue: 1 },
+      { name: 'max', label: '最大值', type: 'number', defaultValue: 10 },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ 在 {min} 和 {max} 之间取随机数',
+  },
+  {
+    type: 'math_round',
+    category: 'math',
+    name: '取整',
+    description: '对数字进行取整操作',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'mode', label: '方式', type: 'select', defaultValue: 'round', options: [
+        { label: '四舍五入', value: 'round' },
+        { label: '向下取整', value: 'floor' },
+        { label: '向上取整', value: 'ceil' },
+      ]},
+      { name: 'value', label: '数值', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {mode} {value}',
+  },
+  {
+    type: 'math_mod',
+    category: 'math',
+    name: '取余',
+    description: '求两数相除的余数',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'left', label: '被除数', type: 'expression', required: true, placeholder: '数值' },
+      { name: 'right', label: '除数', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {left} 除以 {right} 的余数',
+  },
+  {
+    type: 'math_abs',
+    category: 'math',
+    name: '绝对值',
+    description: '取数字的绝对值',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'value', label: '数值', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {value} 的绝对值',
+  },
+  {
+    type: 'math_minmax',
+    category: 'math',
+    name: '最值',
+    description: '取两数中的最大或最小值',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'mode', label: '类型', type: 'select', defaultValue: 'max', options: [
+        { label: '最大值', value: 'max' },
+        { label: '最小值', value: 'min' },
+      ]},
+      { name: 'a', label: '数值1', type: 'expression', required: true, placeholder: '数值' },
+      { name: 'b', label: '数值2', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {a} 和 {b} 中的{mode}',
+  },
+  {
+    type: 'math_sqrt',
+    category: 'math',
+    name: '平方根',
+    description: '计算平方根',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'value', label: '数值', type: 'expression', required: true, placeholder: '数值' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {value} 的平方根',
+  },
+  {
+    type: 'math_power',
+    category: 'math',
+    name: '幂运算',
+    description: '计算幂次方',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'base', label: '底数', type: 'expression', required: true, placeholder: '底数' },
+      { name: 'exponent', label: '指数', type: 'expression', required: true, placeholder: '指数' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {base} 的 {exponent} 次方',
+  },
+  {
+    type: 'math_trig',
+    category: 'math',
+    name: '三角函数',
+    description: '计算三角函数值',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'func', label: '函数', type: 'select', defaultValue: 'sin', options: [
+        { label: 'sin 正弦', value: 'sin' },
+        { label: 'cos 余弦', value: 'cos' },
+        { label: 'tan 正切', value: 'tan' },
+        { label: 'asin 反正弦', value: 'asin' },
+        { label: 'acos 反余弦', value: 'acos' },
+        { label: 'atan 反正切', value: 'atan' },
+      ]},
+      { name: 'value', label: '角度', type: 'expression', required: true, placeholder: '角度' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {func} {value}',
+  },
+  {
+    type: 'math_constrain',
+    category: 'math',
+    name: '限制范围',
+    description: '将数值限制在指定范围内',
+    color: BLOCK_COLORS.math,
+    inputs: [
+      { name: 'value', label: '数值', type: 'expression', required: true, placeholder: '数值' },
+      { name: 'min', label: '最小值', type: 'number', defaultValue: 0 },
+      { name: 'max', label: '最大值', type: 'number', defaultValue: 100 },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ 将 {value} 限制在 {min} 到 {max}',
+  },
+
+  // 文本类
+  {
+    type: 'text_string',
+    category: 'text',
+    name: '文本',
+    description: '文本值',
+    color: BLOCK_COLORS.text,
+    inputs: [
+      { name: 'value', label: '文本', type: 'string', defaultValue: '', placeholder: '输入文本' },
+    ],
+    outputs: [{ name: 'value', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ "{value}"',
+  },
+  {
+    type: 'text_join',
+    category: 'text',
+    name: '连接',
+    description: '连接多个文本',
+    color: BLOCK_COLORS.text,
+    inputs: [
+      { name: 'text1', label: '文本1', type: 'expression', required: true, placeholder: '文本' },
+      { name: 'text2', label: '文本2', type: 'expression', required: true, placeholder: '文本' },
+    ],
+    outputs: [{ name: 'result', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ 连接 {text1} 和 {text2}',
+  },
+  {
+    type: 'text_length',
+    category: 'text',
+    name: '长度',
+    description: '获取文本长度',
+    color: BLOCK_COLORS.text,
+    inputs: [
+      { name: 'text', label: '文本', type: 'expression', required: true, placeholder: '文本' },
+    ],
+    outputs: [{ name: 'length', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {text} 的字符数',
+  },
+  {
+    type: 'text_contains',
+    category: 'text',
+    name: '包含',
+    description: '检测文本是否包含指定内容',
+    color: BLOCK_COLORS.text,
+    inputs: [
+      { name: 'text', label: '文本', type: 'expression', required: true, placeholder: '文本' },
+      { name: 'search', label: '查找', type: 'expression', required: true, placeholder: '查找内容' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '◇ {text} 包含 {search}?',
+  },
+  {
+    type: 'text_letter',
+    category: 'text',
+    name: '第N个字符',
+    description: '获取文本中指定位置的字符',
+    color: BLOCK_COLORS.text,
+    inputs: [
+      { name: 'index', label: '第', type: 'number', defaultValue: 1 },
+      { name: 'text', label: '字符', type: 'expression', required: true, placeholder: '文本' },
+    ],
+    outputs: [{ name: 'letter', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '○ {text} 的第 {index} 个字符',
+  },
+
+  // ========== 游戏事件类 ==========
+  {
+    type: 'game_event_start',
+    category: 'game_event',
+    name: '当游戏开始',
+    description: '游戏开始时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎮 当游戏开始',
+  },
+  {
+    type: 'game_event_update',
+    category: 'game_event',
+    name: '每帧执行',
+    description: '每一帧都执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔄 每帧执行',
+  },
+  {
+    type: 'game_event_keydown',
+    category: 'game_event',
+    name: '当按下按键',
+    description: '当按下指定按键时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'key', label: '按键', type: 'select', defaultValue: 'any', options: [
+        { label: '任意键', value: 'any' },
+        { label: '↑ 上', value: 'ArrowUp' },
+        { label: '↓ 下', value: 'ArrowDown' },
+        { label: '← 左', value: 'ArrowLeft' },
+        { label: '→ 右', value: 'ArrowRight' },
+        { label: '空格', value: 'Space' },
+        { label: 'W', value: 'KeyW' },
+        { label: 'A', value: 'KeyA' },
+        { label: 'S', value: 'KeyS' },
+        { label: 'D', value: 'KeyD' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⌨️ 当按下 {key}',
+  },
+  {
+    type: 'game_event_collision',
+    category: 'game_event',
+    name: '当碰撞到',
+    description: '当碰撞到指定标签的对象时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'tag', label: '标签', type: 'string', defaultValue: '', placeholder: '输入标签' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💥 当碰撞到 {tag}',
+  },
+  {
+    type: 'game_event_message',
+    category: 'game_event',
+    name: '当收到消息',
+    description: '当收到指定消息时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'message', label: '消息', type: 'string', defaultValue: '', placeholder: '输入消息名' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📨 当收到消息 {message}',
+  },
+  {
+    type: 'game_event_clone',
+    category: 'game_event',
+    name: '当被克隆时',
+    description: '作为克隆体启动时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📋 当被克隆时',
+  },
+
+  // ========== 游戏运动类 ==========
+  {
+    type: 'game_move',
+    category: 'game_motion',
+    name: '移动',
+    description: '相对移动指定距离',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'x', label: 'X距离', type: 'number', defaultValue: 10 },
+      { name: 'y', label: 'Y距离', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '➡️ 移动 X:{x} Y:{y}',
+  },
+  {
+    type: 'game_moveto',
+    category: 'game_motion',
+    name: '移动到',
+    description: '移动到指定位置',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'x', label: 'X位置', type: 'number', defaultValue: 0 },
+      { name: 'y', label: 'Y位置', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📍 移动到 ({x}, {y})',
+  },
+  {
+    type: 'game_glide',
+    category: 'game_motion',
+    name: '滑动到',
+    description: '在指定时间内滑动到目标位置',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'x', label: 'X位置', type: 'number', defaultValue: 0 },
+      { name: 'y', label: 'Y位置', type: 'number', defaultValue: 0 },
+      { name: 'duration', label: '时间(秒)', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎯 在 {duration} 秒内滑动到 ({x}, {y})',
+  },
+  {
+    type: 'game_setvelocity',
+    category: 'game_motion',
+    name: '设置速度',
+    description: '设置移动速度',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'vx', label: 'X速度', type: 'number', defaultValue: 0 },
+      { name: 'vy', label: 'Y速度', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💨 设置速度 ({vx}, {vy})',
+  },
+  {
+    type: 'game_rotate',
+    category: 'game_motion',
+    name: '旋转',
+    description: '旋转指定角度',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'angle', label: '角度', type: 'number', defaultValue: 15 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔄 旋转 {angle} 度',
+  },
+  {
+    type: 'game_rotateto',
+    category: 'game_motion',
+    name: '旋转到',
+    description: '旋转到指定角度',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'angle', label: '角度', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎯 旋转到 {angle} 度',
+  },
+  {
+    type: 'game_pointtowards',
+    category: 'game_motion',
+    name: '面向',
+    description: '面向指定位置',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [
+      { name: 'x', label: 'X位置', type: 'number', defaultValue: 0 },
+      { name: 'y', label: 'Y位置', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👁️ 面向 ({x}, {y})',
+  },
+  {
+    type: 'game_bounce',
+    category: 'game_motion',
+    name: '碰到边缘反弹',
+    description: '碰到边缘时反弹',
+    color: BLOCK_COLORS.game_motion,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🏓 碰到边缘反弹',
+  },
+
+  // ========== 游戏外观类 ==========
+  {
+    type: 'game_show',
+    category: 'game_looks',
+    name: '显示',
+    description: '显示角色',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👁️ 显示',
+  },
+  {
+    type: 'game_hide',
+    category: 'game_looks',
+    name: '隐藏',
+    description: '隐藏角色',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🙈 隐藏',
+  },
+  {
+    type: 'game_setsize',
+    category: 'game_looks',
+    name: '设置大小',
+    description: '设置角色大小',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [
+      { name: 'width', label: '宽度', type: 'number', defaultValue: 100 },
+      { name: 'height', label: '高度', type: 'number', defaultValue: 100 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📐 设置大小为 {width}×{height}',
+  },
+  {
+    type: 'game_setscale',
+    category: 'game_looks',
+    name: '设置缩放',
+    description: '设置缩放比例',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [
+      { name: 'scale', label: '缩放%', type: 'number', defaultValue: 100 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔍 设置缩放为 {scale}%',
+  },
+  {
+    type: 'game_setopacity',
+    category: 'game_looks',
+    name: '设置透明度',
+    description: '设置透明度',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [
+      { name: 'opacity', label: '透明度%', type: 'number', defaultValue: 100 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💧 设置透明度为 {opacity}%',
+  },
+  {
+    type: 'game_setcostume',
+    category: 'game_looks',
+    name: '切换造型',
+    description: '切换到指定造型',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [
+      { name: 'costume', label: '造型', type: 'string', defaultValue: '', placeholder: '造型名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎭 切换造型为 {costume}',
+  },
+  {
+    type: 'game_nextcostume',
+    category: 'game_looks',
+    name: '下一个造型',
+    description: '切换到下一个造型',
+    color: BLOCK_COLORS.game_looks,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎭 下一个造型',
+  },
+
+  // ========== 游戏侦测类 ==========
+  {
+    type: 'game_istouching',
+    category: 'game_sensing',
+    name: '碰到了?',
+    description: '检测是否碰到指定标签的对象',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [
+      { name: 'tag', label: '标签', type: 'string', defaultValue: '', placeholder: '输入标签' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '碰到了 {tag}?',
+  },
+  {
+    type: 'game_getposition',
+    category: 'game_sensing',
+    name: '获取位置',
+    description: '获取当前位置',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [
+      { name: 'axis', label: '坐标轴', type: 'select', defaultValue: 'x', options: [
+        { label: 'X坐标', value: 'x' },
+        { label: 'Y坐标', value: 'y' },
+      ]},
+    ],
+    outputs: [{ name: 'position', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '{axis} 坐标',
+  },
+  {
+    type: 'game_getrotation',
+    category: 'game_sensing',
+    name: '获取方向',
+    description: '获取当前方向角度',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [],
+    outputs: [{ name: 'rotation', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '方向角度',
+  },
+  {
+    type: 'game_distanceto',
+    category: 'game_sensing',
+    name: '到...的距离',
+    description: '计算到指定位置的距离',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [
+      { name: 'x', label: 'X位置', type: 'number', defaultValue: 0 },
+      { name: 'y', label: 'Y位置', type: 'number', defaultValue: 0 },
+    ],
+    outputs: [{ name: 'distance', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '到 ({x}, {y}) 的距离',
+  },
+  {
+    type: 'game_keypressed',
+    category: 'game_sensing',
+    name: '按键被按下?',
+    description: '检测按键是否被按下',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [
+      { name: 'key', label: '按键', type: 'select', defaultValue: 'Space', options: [
+        { label: '↑ 上', value: 'ArrowUp' },
+        { label: '↓ 下', value: 'ArrowDown' },
+        { label: '← 左', value: 'ArrowLeft' },
+        { label: '→ 右', value: 'ArrowRight' },
+        { label: '空格', value: 'Space' },
+        { label: 'W', value: 'KeyW' },
+        { label: 'A', value: 'KeyA' },
+        { label: 'S', value: 'KeyS' },
+        { label: 'D', value: 'KeyD' },
+      ]},
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '{key} 被按下?',
+  },
+
+  // ========== 游戏状态类 ==========
+  {
+    type: 'game_setscore',
+    category: 'game_state',
+    name: '设置得分',
+    description: '设置得分为指定值',
+    color: BLOCK_COLORS.game_state,
+    inputs: [
+      { name: 'score', label: '得分', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎯 设置得分为 {score}',
+  },
+  {
+    type: 'game_addscore',
+    category: 'game_state',
+    name: '增加得分',
+    description: '增加指定得分',
+    color: BLOCK_COLORS.game_state,
+    inputs: [
+      { name: 'amount', label: '分数', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '➕ 增加 {amount} 分',
+  },
+  {
+    type: 'game_getscore',
+    category: 'game_state',
+    name: '当前得分',
+    description: '获取当前得分',
+    color: BLOCK_COLORS.game_state,
+    inputs: [],
+    outputs: [{ name: 'score', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '当前得分',
+  },
+  {
+    type: 'game_setlives',
+    category: 'game_state',
+    name: '设置生命',
+    description: '设置生命值',
+    color: BLOCK_COLORS.game_state,
+    inputs: [
+      { name: 'lives', label: '生命', type: 'number', defaultValue: 3 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '❤️ 设置生命为 {lives}',
+  },
+  {
+    type: 'game_loselife',
+    category: 'game_state',
+    name: '减少生命',
+    description: '减少指定生命值',
+    color: BLOCK_COLORS.game_state,
+    inputs: [
+      { name: 'amount', label: '数量', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💔 减少 {amount} 生命',
+  },
+  {
+    type: 'game_getlives',
+    category: 'game_state',
+    name: '当前生命',
+    description: '获取当前生命值',
+    color: BLOCK_COLORS.game_state,
+    inputs: [],
+    outputs: [{ name: 'lives', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '当前生命',
+  },
+  {
+    type: 'game_gotoscene',
+    category: 'game_state',
+    name: '跳转场景',
+    description: '跳转到指定场景',
+    color: BLOCK_COLORS.game_state,
+    inputs: [
+      { name: 'sceneId', label: '场景', type: 'string', defaultValue: '', placeholder: '场景ID' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎬 跳转到场景 {sceneId}',
+  },
+  {
+    type: 'game_restartgame',
+    category: 'game_state',
+    name: '重新开始',
+    description: '重新开始游戏',
+    color: BLOCK_COLORS.game_state,
+    inputs: [],
+    canHaveNext: false,
+    canBeNested: false,
+    template: '🔄 重新开始游戏',
+  },
+  {
+    type: 'game_gameover',
+    category: 'game_state',
+    name: '游戏结束',
+    description: '结束游戏',
+    color: BLOCK_COLORS.game_state,
+    inputs: [],
+    canHaveNext: false,
+    canBeNested: false,
+    template: '🛑 游戏结束',
+  },
+
+  // ========== 游戏克隆类 ==========
+  {
+    type: 'game_clone',
+    category: 'game_clone',
+    name: '克隆自己',
+    description: '创建自己的克隆体',
+    color: BLOCK_COLORS.game_clone,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📋 克隆自己',
+  },
+  {
+    type: 'game_cloneof',
+    category: 'game_clone',
+    name: '克隆',
+    description: '创建指定对象的克隆体',
+    color: BLOCK_COLORS.game_clone,
+    inputs: [
+      { name: 'target', label: '目标', type: 'string', defaultValue: '', placeholder: '对象名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📋 克隆 {target}',
+  },
+  {
+    type: 'game_destroy',
+    category: 'game_clone',
+    name: '删除此克隆体',
+    description: '删除当前克隆体',
+    color: BLOCK_COLORS.game_clone,
+    inputs: [],
+    canHaveNext: false,
+    canBeNested: false,
+    template: '🗑️ 删除此克隆体',
+  },
+  {
+    type: 'game_broadcast',
+    category: 'game_clone',
+    name: '广播消息',
+    description: '广播指定消息',
+    color: BLOCK_COLORS.game_clone,
+    inputs: [
+      { name: 'message', label: '消息', type: 'string', defaultValue: '', placeholder: '消息名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📢 广播消息 {message}',
+  },
+  {
+    type: 'game_broadcastwait',
+    category: 'game_clone',
+    name: '广播并等待',
+    description: '广播消息并等待完成',
+    color: BLOCK_COLORS.game_clone,
+    inputs: [
+      { name: 'message', label: '消息', type: 'string', defaultValue: '', placeholder: '消息名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📢 广播消息 {message} 并等待',
+  },
+
+  // ========== 游戏声音类 ==========
+  {
+    type: 'game_playsound',
+    category: 'game_sound',
+    name: '播放音效',
+    description: '播放指定音效',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [
+      { name: 'sound', label: '音效', type: 'string', defaultValue: '', placeholder: '音效名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔊 播放音效 {sound}',
+  },
+  {
+    type: 'game_playmusic',
+    category: 'game_sound',
+    name: '播放音乐',
+    description: '播放背景音乐(循环)',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [
+      { name: 'music', label: '音乐', type: 'string', defaultValue: '', placeholder: '音乐名称' },
+      { name: 'loop', label: '循环', type: 'boolean', defaultValue: true },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🎵 播放音乐 {music}',
+  },
+  {
+    type: 'game_stopsound',
+    category: 'game_sound',
+    name: '停止音效',
+    description: '停止指定音效',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [
+      { name: 'sound', label: '音效', type: 'string', defaultValue: '', placeholder: '音效名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔇 停止音效 {sound}',
+  },
+  {
+    type: 'game_stopallsound',
+    category: 'game_sound',
+    name: '停止所有声音',
+    description: '停止所有正在播放的声音',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔇 停止所有声音',
+  },
+  {
+    type: 'game_setvolume',
+    category: 'game_sound',
+    name: '设置音量',
+    description: '设置音量大小',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [
+      { name: 'volume', label: '音量%', type: 'number', defaultValue: 100 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔉 设置音量为 {volume}%',
+  },
+  {
+    type: 'game_changevolume',
+    category: 'game_sound',
+    name: '改变音量',
+    description: '增减音量大小',
+    color: BLOCK_COLORS.game_sound,
+    inputs: [
+      { name: 'amount', label: '改变量', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔉 音量增加 {amount}',
+  },
+
+  // ========== 游戏物理类 ==========
+  {
+    type: 'game_setgravity',
+    category: 'game_physics',
+    name: '设置重力',
+    description: '设置重力大小',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'gravity', label: '重力', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⬇️ 设置重力为 {gravity}',
+  },
+  {
+    type: 'game_setfriction',
+    category: 'game_physics',
+    name: '设置摩擦力',
+    description: '设置摩擦系数',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'friction', label: '摩擦力', type: 'number', defaultValue: 0.5 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🛑 设置摩擦力为 {friction}',
+  },
+  {
+    type: 'game_setbounce',
+    category: 'game_physics',
+    name: '设置弹性',
+    description: '设置弹性系数',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'bounce', label: '弹性', type: 'number', defaultValue: 0.8 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🏀 设置弹性为 {bounce}',
+  },
+  {
+    type: 'game_applyforce',
+    category: 'game_physics',
+    name: '施加力',
+    description: '对物体施加力',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'fx', label: 'X力', type: 'number', defaultValue: 0 },
+      { name: 'fy', label: 'Y力', type: 'number', defaultValue: -100 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💪 施加力 ({fx}, {fy})',
+  },
+  {
+    type: 'game_setmass',
+    category: 'game_physics',
+    name: '设置质量',
+    description: '设置物体质量',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'mass', label: '质量', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⚖️ 设置质量为 {mass}',
+  },
+  {
+    type: 'game_enablephysics',
+    category: 'game_physics',
+    name: '启用物理',
+    description: '启用或禁用物理模拟',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'enabled', label: '启用', type: 'boolean', defaultValue: true },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⚙️ {enabled} 物理模拟',
+  },
+  {
+    type: 'game_place_invisible_platform',
+    category: 'game_physics',
+    name: '放置隐形平台',
+    description: '在指定位置放置一个隐形平台，角色可以在上面行走',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'x', label: 'X位置', type: 'number', defaultValue: 200 },
+      { name: 'y', label: 'Y位置', type: 'number', defaultValue: 300 },
+      { name: 'width', label: '宽度', type: 'number', defaultValue: 200 },
+      { name: 'height', label: '高度', type: 'number', defaultValue: 20 },
+      { name: 'id', label: '平台ID', type: 'string', defaultValue: 'platform1' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔲 放置隐形平台 ({x}, {y}) 大小 {width}×{height} ID:{id}',
+  },
+  {
+    type: 'game_remove_invisible_platform',
+    category: 'game_physics',
+    name: '移除隐形平台',
+    description: '移除指定ID的隐形平台',
+    color: BLOCK_COLORS.game_physics,
+    inputs: [
+      { name: 'id', label: '平台ID', type: 'string', defaultValue: 'platform1' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '❌ 移除隐形平台 ID:{id}',
+  },
+
+  // ========== 游戏特效类 ==========
+  {
+    type: 'game_seteffect',
+    category: 'game_effect',
+    name: '设置特效',
+    description: '设置视觉特效',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'effect', label: '特效', type: 'select', defaultValue: 'blur', options: [
+        { label: '模糊', value: 'blur' },
+        { label: '亮度', value: 'brightness' },
+        { label: '对比度', value: 'contrast' },
+        { label: '色相', value: 'hue' },
+        { label: '饱和度', value: 'saturation' },
+        { label: '灰度', value: 'grayscale' },
+        { label: '反色', value: 'invert' },
+      ]},
+      { name: 'value', label: '值', type: 'number', defaultValue: 0 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '✨ 设置 {effect} 特效为 {value}',
+  },
+  {
+    type: 'game_changeeffect',
+    category: 'game_effect',
+    name: '改变特效',
+    description: '改变视觉特效值',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'effect', label: '特效', type: 'select', defaultValue: 'blur', options: [
+        { label: '模糊', value: 'blur' },
+        { label: '亮度', value: 'brightness' },
+        { label: '对比度', value: 'contrast' },
+        { label: '色相', value: 'hue' },
+        { label: '饱和度', value: 'saturation' },
+      ]},
+      { name: 'amount', label: '改变量', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '✨ {effect} 特效增加 {amount}',
+  },
+  {
+    type: 'game_cleareffects',
+    category: 'game_effect',
+    name: '清除特效',
+    description: '清除所有视觉特效',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🧹 清除所有特效',
+  },
+  {
+    type: 'game_shake',
+    category: 'game_effect',
+    name: '震动',
+    description: '震动画面',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'intensity', label: '强度', type: 'number', defaultValue: 5 },
+      { name: 'duration', label: '时长(秒)', type: 'number', defaultValue: 0.5 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📳 震动 强度{intensity} 时长{duration}秒',
+  },
+  {
+    type: 'game_flash',
+    category: 'game_effect',
+    name: '闪光',
+    description: '画面闪光效果',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'color', label: '颜色', type: 'string', defaultValue: '#FFFFFF' },
+      { name: 'duration', label: '时长(秒)', type: 'number', defaultValue: 0.3 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '💥 闪光 {color} 持续{duration}秒',
+  },
+  {
+    type: 'game_fadein',
+    category: 'game_effect',
+    name: '淡入',
+    description: '画面淡入效果',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'duration', label: '时长(秒)', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🌅 淡入 {duration}秒',
+  },
+  {
+    type: 'game_fadeout',
+    category: 'game_effect',
+    name: '淡出',
+    description: '画面淡出效果',
+    color: BLOCK_COLORS.game_effect,
+    inputs: [
+      { name: 'duration', label: '时长(秒)', type: 'number', defaultValue: 1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🌆 淡出 {duration}秒',
+  },
+
+  // ========== 游戏列表类 ==========
+  {
+    type: 'game_createlist',
+    category: 'game_list',
+    name: '创建列表',
+    description: '创建新列表',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'name', label: '列表名', type: 'string', defaultValue: '', placeholder: '列表名称' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📋 创建列表 {name}',
+  },
+  {
+    type: 'game_addtolist',
+    category: 'game_list',
+    name: '添加到列表',
+    description: '向列表末尾添加项目',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'item', label: '项目', type: 'expression', required: true, placeholder: '值' },
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '➕ 将 {item} 添加到 {list}',
+  },
+  {
+    type: 'game_removefromlist',
+    category: 'game_list',
+    name: '从列表删除',
+    description: '从列表中删除指定位置的项目',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'index', label: '位置', type: 'number', defaultValue: 1 },
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '➖ 删除 {list} 的第 {index} 项',
+  },
+  {
+    type: 'game_getlistitem',
+    category: 'game_list',
+    name: '列表项目',
+    description: '获取列表中指定位置的项目',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'index', label: '位置', type: 'number', defaultValue: 1 },
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+    ],
+    outputs: [{ name: 'item', type: 'any' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '{list} 的第 {index} 项',
+  },
+  {
+    type: 'game_setlistitem',
+    category: 'game_list',
+    name: '设置列表项',
+    description: '设置列表中指定位置的项目',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'index', label: '位置', type: 'number', defaultValue: 1 },
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+      { name: 'value', label: '值', type: 'expression', required: true, placeholder: '新值' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📝 将 {list} 的第 {index} 项设为 {value}',
+  },
+  {
+    type: 'game_listlength',
+    category: 'game_list',
+    name: '列表长度',
+    description: '获取列表的项目数量',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+    ],
+    outputs: [{ name: 'length', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '{list} 的长度',
+  },
+  {
+    type: 'game_listcontains',
+    category: 'game_list',
+    name: '列表包含',
+    description: '检查列表是否包含指定项目',
+    color: BLOCK_COLORS.game_list,
+    inputs: [
+      { name: 'list', label: '列表', type: 'string', required: true, placeholder: '列表名' },
+      { name: 'item', label: '项目', type: 'expression', required: true, placeholder: '查找值' },
+    ],
+    outputs: [{ name: 'result', type: 'boolean' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '{list} 包含 {item}?',
+  },
+
+  // ========== 更多控制类 ==========
+  {
+    type: 'control_forever',
+    category: 'control',
+    name: '永远重复',
+    description: '永远重复执行',
+    color: BLOCK_COLORS.control,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔁 永远重复',
+  },
+  {
+    type: 'control_waituntil',
+    category: 'control',
+    name: '等待直到',
+    description: '等待直到条件满足',
+    color: BLOCK_COLORS.control,
+    inputs: [
+      { name: 'condition', label: '条件', type: 'expression', required: true, placeholder: '条件' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⏳ 等待直到 {condition}',
+  },
+  {
+    type: 'control_repeatuntil',
+    category: 'control',
+    name: '重复直到',
+    description: '重复执行直到条件满足',
+    color: BLOCK_COLORS.control,
+    inputs: [
+      { name: 'condition', label: '条件', type: 'expression', required: true, placeholder: '条件' },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔁 重复直到 {condition}',
+  },
+
+  // ========== 更多事件类 ==========
+  {
+    type: 'game_event_touch',
+    category: 'game_event',
+    name: '当触摸时',
+    description: '当触摸屏幕时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👆 当触摸时',
+  },
+  {
+    type: 'game_event_swipe',
+    category: 'game_event',
+    name: '当滑动时',
+    description: '当滑动屏幕时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'direction', label: '方向', type: 'select', defaultValue: 'any', options: [
+        { label: '任意方向', value: 'any' },
+        { label: '向上', value: 'up' },
+        { label: '向下', value: 'down' },
+        { label: '向左', value: 'left' },
+        { label: '向右', value: 'right' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👆 当滑动 {direction} 时',
+  },
+  {
+    type: 'game_event_timer',
+    category: 'game_event',
+    name: '当计时器到达',
+    description: '当计时器达到指定时间时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'time', label: '时间(秒)', type: 'number', defaultValue: 10 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⏰ 当计时器到达 {time} 秒',
+  },
+  {
+    type: 'game_event_keyup',
+    category: 'game_event',
+    name: '当松开按键',
+    description: '当松开指定按键时执行',
+    color: BLOCK_COLORS.game_event,
+    inputs: [
+      { name: 'key', label: '按键', type: 'select', defaultValue: 'any', options: [
+        { label: '任意键', value: 'any' },
+        { label: '↑ 上', value: 'ArrowUp' },
+        { label: '↓ 下', value: 'ArrowDown' },
+        { label: '← 左', value: 'ArrowLeft' },
+        { label: '→ 右', value: 'ArrowRight' },
+        { label: '空格', value: 'Space' },
+        { label: 'W', value: 'KeyW' },
+        { label: 'A', value: 'KeyA' },
+        { label: 'S', value: 'KeyS' },
+        { label: 'D', value: 'KeyD' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⌨️ 当松开 {key}',
+  },
+
+  // ========== 计时器类 ==========
+  {
+    type: 'game_resettimer',
+    category: 'game_sensing',
+    name: '重置计时器',
+    description: '将计时器重置为0',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '⏱️ 重置计时器',
+  },
+  {
+    type: 'game_gettimer',
+    category: 'game_sensing',
+    name: '计时器',
+    description: '获取当前计时器的值',
+    color: BLOCK_COLORS.game_sensing,
+    inputs: [],
+    outputs: [{ name: 'time', type: 'value' }],
+    canHaveNext: false,
+    canBeNested: true,
+    template: '计时器',
+  },
+
+  // ========== 摄像机类 ==========
+  {
+    type: 'game_camera_follow',
+    category: 'game_camera',
+    name: '摄像机跟随',
+    description: '让摄像机跟随指定角色',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'enabled', label: '启用跟随', type: 'boolean', defaultValue: true },
+      { name: 'speed', label: '跟随速度', type: 'number', defaultValue: 0.1 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '📹 {enabled} 摄像机跟随 速度 {speed}',
+  },
+  {
+    type: 'game_set_scene_size',
+    category: 'game_camera',
+    name: '设置场景大小',
+    description: '设置游戏场景的宽度和高度',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'width', label: '宽度', type: 'number', defaultValue: 3000 },
+      { name: 'height', label: '高度', type: 'number', defaultValue: 600 },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🗺️ 设置场景大小 {width}×{height}',
+  },
+  {
+    type: 'game_set_background',
+    category: 'game_camera',
+    name: '设置背景图像',
+    description: '设置单张长背景图',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'imageUrl', label: '图片URL', type: 'string', defaultValue: '' },
+      { name: 'loop', label: '循环', type: 'boolean', defaultValue: false },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🖼️ 设置背景图 {imageUrl} 循环:{loop}',
+  },
+  {
+    type: 'game_add_parallax_layer',
+    category: 'game_camera',
+    name: '添加视差背景层',
+    description: '添加视差滚动背景层',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'imageUrl', label: '图片URL', type: 'string', defaultValue: '' },
+      { name: 'speed', label: '滚动速度', type: 'number', defaultValue: 0.5 },
+      { name: 'layer', label: '层级', type: 'select', defaultValue: 'back', options: [
+        { label: '远景', value: 'far' },
+        { label: '中景', value: 'middle' },
+        { label: '近景', value: 'near' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🏔️ 添加视差层 {imageUrl} 速度{speed} {layer}',
+  },
+  {
+    type: 'game_set_scroll_direction',
+    category: 'game_camera',
+    name: '设置滚动方向',
+    description: '设置场景滚动方向',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'direction', label: '方向', type: 'select', defaultValue: 'horizontal', options: [
+        { label: '横向滚动', value: 'horizontal' },
+        { label: '纵向滚动', value: 'vertical' },
+        { label: '自由滚动', value: 'free' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '↔️ 设置滚动方向 {direction}',
+  },
+  {
+    type: 'game_set_boundary_mode',
+    category: 'game_camera',
+    name: '设置边界模式',
+    description: '设置场景边界模式',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'mode', label: '模式', type: 'select', defaultValue: 'bounded', options: [
+        { label: '有边界', value: 'bounded' },
+        { label: '无限循环', value: 'infinite' },
+      ]},
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '🔲 设置边界模式 {mode}',
+  },
+  {
+    type: 'game_enable_drag',
+    category: 'game_camera',
+    name: '启用手动拖拽',
+    description: '启用或禁用手动拖拽视口',
+    color: BLOCK_COLORS.game_camera,
+    inputs: [
+      { name: 'enabled', label: '启用', type: 'boolean', defaultValue: true },
+    ],
+    canHaveNext: true,
+    canBeNested: false,
+    template: '👆 {enabled} 手动拖拽',
+  },
+];
+
+// 根据类别获取积木
+export function getBlocksByCategory(category: BlockCategory): BlockDefinition[] {
+  return BLOCK_DEFINITIONS.filter(b => b.category === category);
+}
+
+// 根据类型获取积木定义
+export function getBlockDefinition(type: BlockType): BlockDefinition | undefined {
+  return BLOCK_DEFINITIONS.find(b => b.type === type);
+}
+
+// 创建新积木实例
+export function createBlock(type: BlockType): Block | null {
+  const def = getBlockDefinition(type);
+  if (!def) return null;
+
+  return {
+    id: `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    type,
+    category: def.category,
+    name: def.name,
+    inputs: def.inputs.map(input => ({
+      ...input,
+      blockId: undefined,
+    })),
+    outputs: def.outputs,
+    values: def.inputs.reduce((acc, input) => {
+      acc[input.name] = input.defaultValue;
+      return acc;
+    }, {} as Record<string, unknown>),
+  };
+}

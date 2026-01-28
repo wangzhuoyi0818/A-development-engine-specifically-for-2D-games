@@ -1,0 +1,43 @@
+{
+  "name": "@miniprogram-platform/page-editor",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 页面编辑器模块",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "miniprogram",
+    "editor",
+    "visual",
+    "canvas"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "happy-dom": "^12.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

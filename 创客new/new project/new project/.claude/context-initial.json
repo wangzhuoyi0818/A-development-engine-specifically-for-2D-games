@@ -1,0 +1,52 @@
+{
+  "module": "14_Export_MiniProgramExporter",
+  "collection_time": "2026-01-23",
+  "structure": {
+    "location": "C:/Users/wzy16/Desktop/new project/14_Export_MiniProgramExporter/",
+    "subdirs": ["design/", "implementation/"]
+  },
+  "dependencies": {
+    "code_generators": {
+      "wxml": "09_CodeGenerator_WXMLGenerator/implementation/wxml-generator.ts",
+      "wxss": "10_CodeGenerator_WXSSGenerator/implementation/wxss-generator.ts", 
+      "js": "11_CodeGenerator_JSGenerator/implementation/js-generator.ts"
+    },
+    "core_modules": {
+      "project_structure": "01_Core_ProjectStructure/implementation/types.ts"
+    }
+  },
+  "existing_patterns": {
+    "wxml_generator": {
+      "class": "WXMLGenerator",
+      "method": "generate(page: Page, options): WXMLGenerationResult",
+      "returns": "{ code: string, success: boolean, errors, warnings }"
+    },
+    "wxss_generator": {
+      "class": "WXSSGenerator",
+      "method": "generateWXSS(components: Component[], options): string"
+    },
+    "js_generator": {
+      "class": "JSGenerator",
+      "method": "generatePageCode(page: Page, config): JSGenerationResult"
+    }
+  },
+  "tech_stack": {
+    "language": "TypeScript",
+    "runtime": "Node.js",
+    "file_operations": "fs/promises",
+    "path_handling": "path module"
+  },
+  "observations": {
+    "1": "所有代码生成器已实现并可直接调用",
+    "2": "生成器接口统一，都返回结果对象包含success/errors",
+    "3": "项目结构类型定义完整(MiniProgramProject, Page, Component等)",
+    "4": "需要集成三个生成器并添加文件系统操作",
+    "5": "需要生成微信小程序标准配置文件(app.json, project.config.json等)"
+  },
+  "key_questions": [
+    "微信小程序标准目录结构是什么?",
+    "project.config.json完整格式是什么?",
+    "如何进行代码压缩和优化?",
+    "如何打包为zip文件?"
+  ]
+}

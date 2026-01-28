@@ -1,0 +1,26 @@
+{
+  "name": "09-wxml-generator",
+  "version": "1.0.0",
+  "description": "WXML代码生成器 - 微信小程序可视化开发平台",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "wxml",
+    "generator",
+    "miniprogram",
+    "wechat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}

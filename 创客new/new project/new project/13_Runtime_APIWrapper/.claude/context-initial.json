@@ -1,0 +1,73 @@
+{
+  "module": "13_Runtime_APIWrapper",
+  "purpose": "微信小程序API包装器 - 提供统一的API调用接口",
+  "collected_at": "2026-01-23",
+  "context": {
+    "position": {
+      "layer": "运行时层 (Runtime Layer)",
+      "module_path": "C:\\Users\\wzy16\\Desktop\\new project\\13_Runtime_APIWrapper",
+      "dependencies": [
+        "02_Core_EventSystem",
+        "03_Core_VariableSystem",
+        "04_Core_ResourceManagement"
+      ]
+    },
+    "current_status": {
+      "design_docs": [],
+      "implementation": [],
+      "tests": []
+    },
+    "similar_modules": {
+      "01_Core_ProjectStructure": {
+        "pattern": "types.ts定义类型 + 核心实现 + 完整测试",
+        "test_framework": "vitest",
+        "coverage_requirement": ">90%"
+      },
+      "03_Core_VariableSystem": {
+        "pattern": "枚举 + 接口定义 + 序列化支持",
+        "features": ["响应式", "观察者模式", "路径解析"]
+      }
+    },
+    "tech_stack": {
+      "language": "TypeScript",
+      "test_framework": "vitest",
+      "target_platform": "微信小程序",
+      "api_style": "Promise化"
+    },
+    "key_observations": [
+      "所有模块都使用严格的TypeScript类型定义",
+      "测试覆盖率要求>90%",
+      "文档注释使用中文",
+      "类型定义放在types.ts中",
+      "核心实现使用类模式",
+      "需要序列化支持"
+    ],
+    "questions_for_deep_dive": [
+      {
+        "priority": "high",
+        "question": "微信API有哪些分类?每个分类包含哪些具体API?",
+        "reason": "需要了解完整的API清单才能设计包装器结构"
+      },
+      {
+        "priority": "high",
+        "question": "如何实现Promise化?现有模块有没有类似模式?",
+        "reason": "微信原生API是回调式,需要转换为Promise"
+      },
+      {
+        "priority": "medium",
+        "question": "错误处理的统一格式是什么?",
+        "reason": "需要设计统一的错误码和错误处理机制"
+      },
+      {
+        "priority": "medium",
+        "question": "重试机制如何实现?",
+        "reason": "需要设计可配置的重试策略"
+      },
+      {
+        "priority": "low",
+        "question": "Mock数据如何组织?",
+        "reason": "开发环境需要Mock支持"
+      }
+    ]
+  }
+}

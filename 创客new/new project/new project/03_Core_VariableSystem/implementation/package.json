@@ -1,0 +1,35 @@
+{
+  "name": "@miniprogram-visual/variable-system",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 变量系统模块",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "miniprogram",
+    "visual",
+    "variable",
+    "reactive",
+    "gdevelop"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/uuid": "^9.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  }
+}

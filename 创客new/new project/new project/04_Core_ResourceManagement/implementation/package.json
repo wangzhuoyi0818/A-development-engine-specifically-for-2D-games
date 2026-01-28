@@ -1,0 +1,30 @@
+{
+  "name": "resource-management",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 资源管理模块",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "resource-management"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}

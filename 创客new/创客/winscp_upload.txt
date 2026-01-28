@@ -1,0 +1,17 @@
+# WinSCP 自动上传脚本
+# 使用方法：用记事本打开，复制内容，在 WinSCP 中使用
+
+# 连接信息
+option batch on
+option confirm off
+
+# 连接到服务器
+open sftp://root:RYzudn9KCm27@connect.bjb1.seetacloud.com:55567/
+
+# 上传文件
+lcd "E:\最新\最终融合版_20260127\创客new\创客"
+cd /root
+put dist.tar.gz
+
+# 断开连接
+exit

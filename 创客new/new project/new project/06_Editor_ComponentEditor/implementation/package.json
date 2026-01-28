@@ -1,0 +1,26 @@
+{
+  "name": "@miniprogram-platform/component-editor",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 组件编辑器模块",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "miniprogram",
+    "component-editor",
+    "visual-editor",
+    "wechat"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@miniprogram-builder/property-editor",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 属性编辑器模块",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "miniprogram",
+    "property-editor",
+    "form",
+    "validation"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "vitest": "^1.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "events": "^3.3.0"
+  }
+}

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码流程可视化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 面板样式 */
+        .panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .panel.collapsed {
+            transform: translateX(calc(100% - 40px));
+        }
+        .toggle-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateX(-100%) translateY(-50%);
+            background: #3b82f6;
+            color: white;
+            padding: 12px 8px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            writing-mode: vertical-rl;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+        .toggle-btn:hover {
+            background: #2563eb;
+        }
+
+        /* 树形结构样式 */
+        .tree-node {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: nowrap;
+        }
+        .tree-node.hidden {
+            display: none;
+        }
+        .node-content {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .node-content:hover {
+            background: #f3f4f6;
+        }
+        .node-content.selected {
+            background: #dbeafe;
+        }
+
+        /* 节点类型符号颜色 */
+        .symbol-event { color: #f59e0b; }
+        .symbol-loop { color: #f97316; }
+        .symbol-condition { color: #3b82f6; }
+        .symbol-variable { color: #ec4899; }
+        .symbol-action { color: #8b5cf6; }
+        .symbol-wait { color: #10b981; }
+
+        /* 树线颜色 */
+        .tree-line { color: #d1d5db; }
+
+        /* 标签颜色 */
+        .tag-event { background: #fef3c7; color: #92400e; }
+        .tag-loop { background: #ffedd5; color: #9a3412; }
+        .tag-condition { background: #dbeafe; color: #1e40af; }
+        .tag-variable { background: #fce7f3; color: #9d174d; }
+        .tag-action { background: #ede9fe; color: #5b21b6; }
+        .tag-wait { background: #d1fae5; color: #065f46; }
+
+        /* 筛选标签样式 */
+        .filter-tag {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .filter-tag.active {
+            border-color: currentColor;
+        }
+        .filter-tag.inactive {
+            opacity: 0.4;
+        }
+
+        /* 折叠图标 */
+        .collapse-icon {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .collapse-icon:hover {
+            color: #6b7280;
+        }
+
+        /* 滚动条 */
+        .tree-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .tree-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .tree-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 示例主内容区域 -->
+    <div class="p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">主页面内容区域</h1>
+        <p class="text-gray-600">这里是你的主要页面内容。点击右侧的"代码流程"标签可以展开/收起可视化面板。</p>
+    </div>
+
+    <!-- 可收起的右侧面板 -->
+    <div id="panel" class="panel collapsed w-80">
+        <!-- 收起/展开按钮 -->
+        <div class="toggle-btn" onclick="togglePanel()">
+            <i class="fa fa-code mr-1"></i> 代码流程
+        </div>
+
+        <!-- 面板内容 -->
+        <div class="h-full flex flex-col">
+            <!-- 顶部筛选栏 -->
+            <div class="p-3 border-b bg-gray-50">
+                <div class="flex flex-wrap gap-2">
+                    <span class="filter-tag tag-event active" data-type="event" onclick="toggleFilter('event')">事件</span>
+                    <span class="filter-tag tag-loop active" data-type="loop" onclick="toggleFilter('loop')">循环</span>
+                    <span class="filter-tag tag-condition active" data-type="condition" onclick="toggleFilter('condition')">条件</span>
+                    <span class="filter-tag tag-variable active" data-type="variable" onclick="toggleFilter('variable')">变量</span>
+                    <span class="filter-tag tag-action active" data-type="action" onclick="toggleFilter('action')">动作</span>
+                    <span class="filter-tag tag-wait active" data-type="wait" onclick="toggleFilter('wait')">等待</span>
+                </div>
+            </div>
+
+            <!-- 树形结构容器 -->
+            <div class="tree-container flex-1 overflow-auto p-4" id="treeContainer">
+                <!-- 树形结构将由JS渲染 -->
+            </div>
+
+            <!-- 底部图例 -->
+            <div class="p-3 border-t bg-gray-50 text-xs text-gray-500">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <span><i class="fa fa-circle symbol-event"></i> 事件</span>
+                    <span><i class="fa fa-circle symbol-loop"></i> 循环</span>
+                    <span><i class="fa fa-circle symbol-condition"></i> 条件</span>
+                    <span><i class="fa fa-circle symbol-variable"></i> 变量</span>
+                    <span><i class="fa fa-circle symbol-action"></i> 动作</span>
+                    <span><i class="fa fa-circle symbol-wait"></i> 等待</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 代码块数据 - 树形结构
+        const codeTree = [
+            {
+                id: 'event-start',
+                type: 'event',
+                label: '当收到通知',
+                detail: '开始游戏',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'loop-main',
+                        type: 'loop',
+                        label: '重复执行直到',
+                        detail: '游戏状态 >= 3',
+                        collapsed: false,
+                        children: [
+                            {
+                                id: 'wait-state1',
+                                type: 'wait',
+                                label: '等待',
+                                detail: '游戏状态 == 1',
+                                children: []
+                            },
+                            {
+                                id: 'condition-monster',
+                                type: 'condition',
+                                label: '如果',
+                                detail: '怪物数量 < sqrt(得分)',
+                                collapsed: false,
+                                children: [
+                                    {
+                                        id: 'var-add',
+                                        type: 'variable',
+                                        label: '将 怪物数量',
+                                        detail: '+1',
+                                        children: []
+                                    },
+                                    {
+                                        id: 'action-clone',
+                                        type: 'action',
+                                        label: '克隆',
+                                        detail: '敌人',
+                                        children: []
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'loop-inner',
+                                type: 'loop',
+                                label: '重复执行',
+                                detail: '12 次',
+                                collapsed: false,
+                                children: [
+                                    {
+                                        id: 'wait-inner',
+                                        type: 'wait',
+                                        label: '等待',
+                                        detail: '随机 0.5~1 秒',
+                                        children: []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'event-score',
+                type: 'event',
+                label: '当收到通知',
+                detail: '得分',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'var-score',
+                        type: 'variable',
+                        label: '将 游戏得分',
+                        detail: '+连击',
+                        children: []
+                    },
+                    {
+                        id: 'var-combo',
+                        type: 'variable',
+                        label: '将 连击',
+                        detail: '+1',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 'event-bounce',
+                type: 'event',
+                label: '当收到通知',
+                detail: '弹跳',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'var-reset-combo',
+                        type: 'variable',
+                        label: '将 连击',
+                        detail: '设为 1',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 'event-end',
+                type: 'event',
+                label: '当收到通知',
+                detail: '结束游戏',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'var-state-end',
+                        type: 'variable',
+                        label: '将 游戏状态',
+                        detail: '设为 3',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 'event-resume',
+                type: 'event',
+                label: '当收到通知',
+                detail: '恢复游戏',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'var-state-resume',
+                        type: 'variable',
+                        label: '将 游戏状态',
+                        detail: '设为 1',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 'event-home',
+                type: 'event',
+                label: '当收到通知',
+                detail: '回到首页',
+                collapsed: false,
+                children: [
+                    {
+                        id: 'var-reset-all',
+                        type: 'variable',
+                        label: '将 游戏状态',
+                        detail: '设为 0',
+                        children: []
+                    },
+                    {
+                        id: 'var-reset-score',
+                        type: 'variable',
+                        label: '将 游戏得分',
+                        detail: '设为 0',
+                        children: []
+                    },
+                    {
+                        id: 'var-reset-monster',
+                        type: 'variable',
+                        label: '将 怪物数量',
+                        detail: '设为 0',
+                        children: []
+                    }
+                ]
+            }
+        ];
+
+        // 当前激活的筛选类型
+        const activeFilters = new Set(['event', 'loop', 'condition', 'variable', 'action', 'wait']);
+
+        // 符号映射
+        const symbols = {
+            event: '●',
+            loop: '↻',
+            condition: '◆',
+            variable: '□',
+            action: '▶',
+            wait: '◇'
+        };
+
+        // 切换面板
+        function togglePanel() {
+            document.getElementById('panel').classList.toggle('collapsed');
+        }
+
+        // 切换筛选
+        function toggleFilter(type) {
+            const tag = document.querySelector(`.filter-tag[data-type="${type}"]`);
+            if (activeFilters.has(type)) {
+                activeFilters.delete(type);
+                tag.classList.remove('active');
+                tag.classList.add('inactive');
+            } else {
+                activeFilters.add(type);
+                tag.classList.add('active');
+                tag.classList.remove('inactive');
+            }
+            renderTree();
+        }
+
+        // 切换节点折叠状态
+        function toggleCollapse(id) {
+            const node = findNode(codeTree, id);
+            if (node && node.children && node.children.length > 0) {
+                node.collapsed = !node.collapsed;
+                renderTree();
+            }
+        }
+
+        // 查找节点
+        function findNode(nodes, id) {
+            for (const node of nodes) {
+                if (node.id === id) return node;
+                if (node.children) {
+                    const found = findNode(node.children, id);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+
+        // 渲染树形结构
+        function renderTree() {
+            const container = document.getElementById('treeContainer');
+            container.innerHTML = renderNodes(codeTree, '', true);
+        }
+
+        // 渲染节点
+        function renderNodes(nodes, prefix, isRoot) {
+            let html = '';
+            const filteredNodes = nodes.filter(node => activeFilters.has(node.type));
+
+            filteredNodes.forEach((node, index) => {
+                const isLast = index === filteredNodes.length - 1;
+                const hasChildren = node.children && node.children.length > 0;
+                const hasVisibleChildren = hasChildren && node.children.some(child => activeFilters.has(child.type));
+
+                // 当前行
+                const linePrefix = isRoot ? '' : (isLast ? '└─ ' : '├─ ');
+                const collapseIcon = hasVisibleChildren
+                    ? `<span class="collapse-icon" onclick="toggleCollapse('${node.id}')">${node.collapsed ? '+' : '−'}</span>`
+                    : '<span class="collapse-icon"></span>';
+
+                html += `<div class="tree-node" data-id="${node.id}" data-type="${node.type}">`;
+                html += `<span class="tree-line">${prefix}${linePrefix}</span>`;
+                html += `<span class="node-content" onclick="selectNode('${node.id}')">`;
+                html += collapseIcon;
+                html += `<span class="symbol-${node.type}">${symbols[node.type]}</span> `;
+                html += `<span>${node.label}</span>`;
+                html += `<span class="ml-1 text-gray-400">[${node.detail}]</span>`;
+                html += `</span>`;
+                html += `</div>`;
+
+                // 子节点
+                if (hasVisibleChildren && !node.collapsed) {
+                    const childPrefix = isRoot ? '' : (prefix + (isLast ? '   ' : '│  '));
+                    html += renderNodes(node.children, childPrefix, false);
+                }
+            });
+
+            return html;
+        }
+
+        // 选中节点
+        function selectNode(id) {
+            document.querySelectorAll('.node-content').forEach(el => el.classList.remove('selected'));
+            const node = document.querySelector(`[data-id="${id}"] .node-content`);
+            if (node) node.classList.add('selected');
+        }
+
+        // 初始化
+        renderTree();
+    </script>
+</body>
+</html>

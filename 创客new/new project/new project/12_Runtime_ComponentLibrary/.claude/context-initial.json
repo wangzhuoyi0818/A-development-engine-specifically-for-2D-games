@@ -1,0 +1,200 @@
+{
+  "module": "12_Runtime_ComponentLibrary",
+  "task": "实现微信小程序可视化开发平台的组件库模块",
+  "context_collected_at": "2026-01-23",
+
+  "existing_modules": {
+    "01_Core_ProjectStructure": {
+      "status": "已完成",
+      "key_files": [
+        "implementation/types.ts",
+        "implementation/core.ts",
+        "implementation/component-tree.ts"
+      ],
+      "patterns": {
+        "type_definitions": "所有类型定义在 types.ts 中，包含详细的 JSDoc 注释",
+        "interfaces": "使用 interface 定义数据结构，export 公开 API",
+        "enums": "使用 enum 定义枚举类型",
+        "validation": "提供 ValidationResult 接口处理验证结果"
+      }
+    },
+    "06_Editor_ComponentEditor": {
+      "status": "已完成",
+      "key_files": [
+        "implementation/types.ts"
+      ],
+      "component_categories": [
+        "ViewContainer",
+        "BasicContent",
+        "Form",
+        "Navigation",
+        "Media",
+        "Map",
+        "Canvas",
+        "OpenAbility",
+        "Custom"
+      ],
+      "property_types": [
+        "String",
+        "Number",
+        "Boolean",
+        "Color",
+        "Image",
+        "Enum",
+        "Object",
+        "Array",
+        "Event",
+        "Expression"
+      ],
+      "key_interfaces": {
+        "ComponentLibraryItem": "组件库条目定义",
+        "PropertyDefinition": "属性定义",
+        "EventDefinition": "事件定义"
+      }
+    }
+  },
+
+  "reference_materials": {
+    "gdevelop_example": {
+      "file": "reference/example/dummyruntimeobject.ts",
+      "key_patterns": [
+        "继承自 gdjs.RuntimeObject",
+        "构造函数中初始化属性和渲染器",
+        "使用 onCreated() 完成创建",
+        "提供 update() 方法用于游戏循环",
+        "使用 gdjs.registerObject 注册组件"
+      ],
+      "note": "这是游戏引擎的运行时对象，我们需要适配为微信小程序组件定义"
+    }
+  },
+
+  "project_standards": {
+    "language": "TypeScript 4.9+",
+    "test_framework": "Vitest",
+    "test_coverage": ">90%",
+    "documentation": "中文注释",
+    "naming": "驼峰命名法",
+    "file_structure": {
+      "design": "设计文档目录",
+      "implementation": "实现代码目录",
+      "tests": "测试文件目录"
+    }
+  },
+
+  "wechat_miniprogram_components": {
+    "view_containers": [
+      "view",
+      "scroll-view",
+      "swiper",
+      "swiper-item",
+      "movable-view",
+      "movable-area",
+      "cover-view",
+      "cover-image"
+    ],
+    "basic_content": [
+      "text",
+      "icon",
+      "progress",
+      "rich-text"
+    ],
+    "form_components": [
+      "button",
+      "checkbox",
+      "checkbox-group",
+      "form",
+      "input",
+      "label",
+      "picker",
+      "picker-view",
+      "picker-view-column",
+      "radio",
+      "radio-group",
+      "slider",
+      "switch",
+      "textarea"
+    ],
+    "media_components": [
+      "image",
+      "video",
+      "audio",
+      "camera",
+      "live-player",
+      "live-pusher"
+    ],
+    "map_canvas": [
+      "map",
+      "canvas"
+    ],
+    "navigation": [
+      "navigator",
+      "functional-page-navigator"
+    ],
+    "open_ability": [
+      "web-view",
+      "ad",
+      "official-account",
+      "open-data"
+    ]
+  },
+
+  "task_requirements": {
+    "design_docs": [
+      "architecture.md - 组件库架构设计",
+      "dataflow.md - 组件数据流设计"
+    ],
+    "implementation_files": [
+      "types.ts - 类型定义",
+      "component-registry.ts - 组件注册表",
+      "builtin-components/ - 内置组件定义目录",
+      "behavior-system.ts - 行为系统",
+      "component-template.ts - 组件模板",
+      "component-validator.ts - 组件验证"
+    ],
+    "builtin_components_files": [
+      "view-components.ts",
+      "content-components.ts",
+      "form-components.ts",
+      "media-components.ts",
+      "map-canvas-components.ts",
+      "navigator-components.ts",
+      "open-components.ts"
+    ],
+    "test_files": [
+      "component-registry.test.ts",
+      "behavior-system.test.ts",
+      "component-validator.test.ts",
+      "builtin-components 测试"
+    ],
+    "component_definition_requirements": {
+      "properties": "支持的属性及类型、默认值、验证规则",
+      "events": "支持的事件",
+      "children": "可包含的子组件类型",
+      "container": "容器约束",
+      "visual": "图标和预览",
+      "example": "使用示例"
+    }
+  },
+
+  "observations": {
+    "architecture_pattern": "项目使用 Manager 模式管理复杂逻辑，数据结构与操作逻辑分离",
+    "type_system": "使用 TypeScript interface 和 enum 定义严格的类型系统",
+    "documentation": "所有代码都有详细的中文 JSDoc 注释",
+    "testing": "使用 Vitest 进行单元测试，要求覆盖率>90%",
+    "validation": "提供专门的验证函数和 ValidationResult 接口",
+    "gdevelop_reference": "参考材料来自 GDevelop 游戏引擎，需要适配为微信小程序组件库",
+    "component_editor_integration": "06_Editor_ComponentEditor 已定义了组件分类和属性类型枚举，需要保持一致"
+  },
+
+  "key_questions": [],
+
+  "next_steps": [
+    "分析微信小程序官方组件文档",
+    "设计组件库架构",
+    "定义类型系统",
+    "实现组件注册表",
+    "定义内置组件",
+    "实现行为系统",
+    "编写测试"
+  ]
+}

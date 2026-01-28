@@ -1,0 +1,41 @@
+{
+  "name": "@miniprogram-platform/ai-game-generator",
+  "version": "1.0.0",
+  "description": "AI-powered game generator for WeChat Mini Program platform",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "cli": "tsx src/cli.ts",
+    "example": "tsx examples/basic-usage.ts"
+  },
+  "keywords": [
+    "ai",
+    "game-generator",
+    "wechat",
+    "miniprogram",
+    "code-generation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^4.20.1",
+    "handlebars": "^4.7.8",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/handlebars": "^4.1.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "tsx": "^4.7.0"
+  }
+}

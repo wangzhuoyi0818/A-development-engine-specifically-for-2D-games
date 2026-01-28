@@ -1,0 +1,116 @@
+{
+  "module": "15_Preview_Simulator",
+  "timestamp": "2026-01-23",
+  "purpose": "实现微信小程序可视化开发平台的预览模拟器模块",
+
+  "requirements": {
+    "core_features": [
+      "实时预览",
+      "热重载",
+      "多设备预览",
+      "调试支持",
+      "性能监控",
+      "Mock数据"
+    ],
+    "deliverables": {
+      "design": [
+        "architecture.md - 架构设计文档",
+        "dataflow.md - 数据流设计文档"
+      ],
+      "implementation": [
+        "types.ts - 类型定义",
+        "simulator.ts - 模拟器核心",
+        "preview-server.ts - 预览服务器",
+        "hot-reload.ts - 热重载",
+        "debugger-bridge.ts - 调试器桥接",
+        "device-simulator.ts - 设备模拟",
+        "performance-monitor.ts - 性能监控",
+        "mock-environment.ts - Mock环境"
+      ],
+      "tests": [
+        "simulator.test.ts",
+        "hot-reload.test.ts",
+        "device-simulator.test.ts",
+        "performance-monitor.test.ts"
+      ]
+    },
+    "quality": {
+      "coverage": ">90%",
+      "test_framework": "vitest"
+    }
+  },
+
+  "context_from_architecture": {
+    "module_info": {
+      "priority": "中",
+      "source": "GDevelop IDE - newIDE/app/src/Debugger/, GDJS/Runtime/debugger-client/",
+      "reusability": "40%",
+      "purpose": "实时预览和调试"
+    },
+    "related_modules": {
+      "code_generators": [
+        "09_CodeGenerator_WXMLGenerator",
+        "10_CodeGenerator_WXSSGenerator",
+        "11_CodeGenerator_JSGenerator"
+      ],
+      "core_systems": [
+        "01_Core_ProjectStructure"
+      ]
+    }
+  },
+
+  "existing_patterns": {
+    "type_definitions": {
+      "location": "各模块的 types.ts",
+      "pattern": "从核心模块导入基础类型，定义模块特定类型",
+      "example": "09_CodeGenerator_WXMLGenerator/implementation/types.ts"
+    },
+    "code_structure": {
+      "imports": "从其他模块导入类型和工具",
+      "classes": "主类封装核心功能",
+      "exports": "导出主类和类型"
+    },
+    "testing": {
+      "framework": "vitest",
+      "config": "vitest.config.ts",
+      "structure": "describe/it 结构",
+      "coverage_target": ">90%"
+    }
+  },
+
+  "technical_stack": {
+    "language": "TypeScript",
+    "runtime": "Node.js",
+    "server": "需要本地HTTP服务器",
+    "websocket": "用于热重载通信",
+    "file_watching": "监听文件变化"
+  },
+
+  "key_challenges": {
+    "preview": "如何在浏览器中模拟微信小程序环境",
+    "hot_reload": "如何实现快速的代码重载",
+    "device_simulation": "如何模拟不同设备特性",
+    "debugging": "如何与微信开发者工具调试器集成",
+    "performance": "如何监控和展示性能指标",
+    "mock_api": "如何模拟微信API"
+  },
+
+  "initial_observations": [
+    "需要启动HTTP服务器提供预览页面",
+    "需要WebSocket实现实时通信",
+    "需要文件监听器检测代码变化",
+    "需要模拟微信小程序运行时环境",
+    "需要提供设备预设配置（iPhone、iPad等）",
+    "需要收集和展示性能数据",
+    "需要提供Mock API来替代真实微信API"
+  ],
+
+  "suggested_deep_dive": [
+    "研究现有代码生成器的输出格式",
+    "确定预览服务器的架构设计",
+    "确定热重载的实现机制",
+    "确定设备模拟的参数和方式",
+    "确定性能监控的指标和采集方式",
+    "确定Mock API的实现范围"
+  ]
+}

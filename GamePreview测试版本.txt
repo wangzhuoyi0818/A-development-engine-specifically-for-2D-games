@@ -1,0 +1,70 @@
+# GamePreview 调试指南
+
+## 步骤1: 检查基础渲染
+
+请在浏览器中：
+1. 打开 F12 开发者工具
+2. 进入 Console 标签
+3. 点击预览按钮
+
+查看 Console 中是否有这些日志：
+```
+[GamePreview] Component rendering...
+[GamePreview] Current page: [页面名称] [页面ID]
+```
+
+## 步骤2: 检查错误
+
+如果有红色错误信息，请复制完整的错误堆栈给我。
+
+常见错误类型：
+1. `Cannot read property 'xxx' of null` - 某个对象为空
+2. `xxx is not a function` - 方法不存在
+3. `Maximum update depth exceeded` - 无限循环更新
+
+## 步骤3: 检查视觉效果
+
+预览模式应该显示：
+- ✅ 黑色半透明背景覆盖整个屏幕
+- ✅ 顶部白色提示栏 "🎮 游戏预览模式"
+- ✅ 中间白色矩形游戏画布 (375x667)
+- ✅ 画布内显示你放置的组件
+
+如果看不到某些元素，告诉我具体看不到哪些。
+
+## 步骤4: 检查退出功能
+
+点击"退出预览"按钮后：
+- Console 应该显示: `[GamePreview] Exit button clicked`
+- Console 应该显示: `[GamePreview] Component unmounting, stopping engine`
+- 预览模式应该关闭，回到编辑器界面
+
+## 可能的问题
+
+### 问题1: F12 自动弹出且停在代码行
+**原因**: 浏览器的 "Pause on caught exceptions" 被启用
+**解决**:
+1. F12 → Sources 标签
+2. 右侧面板找到暂停图标（⏸️）
+3. 取消勾选 "Pause on caught exceptions"
+
+### 问题2: 画布是空白的
+**原因**: 可能是以下之一
+- currentPage 为 null
+- currentPage.components 为空数组
+- 组件渲染出错
+
+**检查**:
+```javascript
+// 在 Console 中运行
+usePageStore.getState().getCurrentPage()
+```
+应该返回当前页面对象，包含 components 数组。
+
+### 问题3: 退出后编辑器不恢复
+**原因**: onClose 回调没有执行
+**检查**: Console 中应该有 `[GamePreview] Exit button clicked` 日志
+
+## 临时禁用功能测试
+
+如果需要，我可以创建一个极简版本的 GamePreview，只显示一个静态画布，不加载引擎，看看基础渲染是否正常。

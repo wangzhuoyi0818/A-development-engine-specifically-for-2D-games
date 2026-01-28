@@ -1,0 +1,38 @@
+{
+  "name": "miniprogram-project-structure",
+  "version": "1.0.0",
+  "description": "微信小程序可视化开发平台 - 项目结构管理模块",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.ts\""
+  },
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "visual-development",
+    "project-management"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/uuid": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.18.0",
+    "@typescript-eslint/parser": "^6.18.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
+  }
+}
